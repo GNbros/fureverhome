@@ -23,9 +23,19 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("FureverHome"),
+        title: Row(
+          children: const [
+            Icon(Icons.pets, color: Colors.amber),
+            SizedBox(width: 8),
+            Text("FurEver", style: TextStyle(color: Colors.black)),
+          ],
+        ),
+        actions: [
+          IconButton(icon: Icon(Icons.favorite_border), onPressed: () {}),
+          IconButton(icon: Icon(Icons.person_outline), onPressed: () {}),
+        ],
         backgroundColor: Colors.white,
-        elevation: 1,
+        elevation: 0,
         foregroundColor: Colors.black,
       ),
       body: _pages[_selectedIndex],
