@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'views/home/home_page.dart'; // make sure this path exists
+import 'views/main_base.dart';
 
 void main() {
-  runApp(const FurEverApp());
+  runApp(const MyApp());
 }
 
-class FurEverApp extends StatelessWidget {
-  const FurEverApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'FurEver',
-      debugShowCheckedModeBanner: false,
+      title: 'FureverHome',
       theme: ThemeData(
         primarySwatch: Colors.amber,
-        fontFamily: 'Arial',
-        scaffoldBackgroundColor: Colors.white,
+        useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const MainScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
