@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../views/home/home_page.dart';
+import 'package:fureverhome/views/profile/profile.dart';
+import 'home/home.dart';
 import '../views/search/search.dart';
 import '../widgets/custom_nav_bar.dart';
 
@@ -17,7 +18,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = const [
     HomePage(),
     SearchPage(),
-    Center(child: Text("Profile Page")), // Placeholder
+    ProfilePage(),
   ];
 
   @override
