@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fureverhome/views/main_base.dart';
+import 'package:fureverhome/views/search/pet_details.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -94,7 +95,7 @@ class SearchPage extends StatelessWidget {
                   ),
                   PetCard(
                     name: 'Luna',
-                    breed: '<Maltest>',
+                    breed: 'Maltest',
                     age: '1.5 years',
                     gender: 'Female',
                     imageUrl: 'https://i.imgur.com/tGbaZCY.jpg',
@@ -126,71 +127,86 @@ class PetCard extends StatelessWidget {
     final genderColor = gender == 'Male' ? Colors.blue[100] : Colors.pink[100];
     final genderTextColor = gender == 'Male' ? Colors.blue : Colors.pink;
 
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image & Favorite icon
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                child: Image.network(imageUrl, height: 180, width: double.infinity, fit: BoxFit.cover),
-              ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: CircleAvatar(
-                  backgroundColor: Colors.white70,
-                  child: IconButton(
-                    icon: const Icon(Icons.favorite_border),
-                    onPressed: () {},
-                  ),
-                ),
-              )
-            ],
+    return 
+    GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PetDetailsPage(
+              name: name,
+              breed: breed,
+              age: age,
+              gender: gender,
+              imageUrl: imageUrl,
+            ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        );
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        margin: const EdgeInsets.only(bottom: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image & Favorite icon
+            Stack(
               children: [
-                // Name + Gender
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: genderColor,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(gender, style: TextStyle(color: genderTextColor, fontSize: 12)),
-                    )
-                  ],
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                  child: Image.network(imageUrl, height: 180, width: double.infinity, fit: BoxFit.cover),
                 ),
-                const SizedBox(height: 4),
-                Text(breed, style: const TextStyle(color: Colors.grey)),
-
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                    const SizedBox(width: 4),
-                    Text(age, style: const TextStyle(color: Colors.grey)),
-                    const SizedBox(width: 16),
-                    const Icon(Icons.location_on, size: 16, color: Colors.grey),
-                    const SizedBox(width: 4),
-                  ],
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white70,
+                    child: IconButton(
+                      icon: const Icon(Icons.favorite_border),
+                      onPressed: () {},
+                    ),
+                  ),
                 )
               ],
             ),
-          )
-        ],
-      ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Name + Gender
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: genderColor,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(gender, style: TextStyle(color: genderTextColor, fontSize: 12)),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(breed, style: const TextStyle(color: Colors.grey)),
+
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(age, style: const TextStyle(color: Colors.grey)),
+                      const SizedBox(width: 16),
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      )
     );
   }
 }

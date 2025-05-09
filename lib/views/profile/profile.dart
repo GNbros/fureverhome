@@ -27,12 +27,10 @@ class ProfilePage extends StatelessWidget {
           const SizedBox(height: 24),
 
           // Saved Pets & Requests
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _InfoCard(icon: Icons.favorite, title: "Saved Pets", count: 12),
-              _InfoCard(icon: Icons.send, title: "Requests", count: 5),
               _ActionCard(icon: Icons.add, title: "Add Pet"),
             ],
           ),
@@ -168,7 +166,8 @@ class _ListingCard extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('$breed • $age'),
+            Text('$breed '),
+            Text('• $age'),
             Text('$requestCount requests', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
           ],
         ),
