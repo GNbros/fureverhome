@@ -4,20 +4,27 @@ import '../views/search/search.dart';
 import '../widgets/custom_nav_bar.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final int selectedIndex;
+  const MainScreen({super.key, this.selectedIndex = 0});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
   final List<Widget> _pages = const [
     HomePage(),
     SearchPage(),
     Center(child: Text("Profile Page")), // Placeholder
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,6 @@ class _MainScreenState extends State<MainScreen> {
         ),
         actions: [
           IconButton(icon: Icon(Icons.favorite_border), onPressed: () {}),
-          IconButton(icon: Icon(Icons.person_outline), onPressed: () {}),
         ],
         backgroundColor: Colors.white,
         elevation: 0,

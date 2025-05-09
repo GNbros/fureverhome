@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fureverhome/views/main_base.dart';
+
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -13,20 +15,29 @@ class HomePage extends StatelessWidget {
           Container(
             color: const Color(0xFFF3E4B2),
             width: double.infinity,
+            height: 250,
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   "Find Your Perfect Companion",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 const Text("Give a loving home to a pet in need"),
                 const SizedBox(height: 16),
+                const Spacer(),
                 ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MainScreen(selectedIndex: 1),
+                      ),
+                    );
+                  },
+                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.amber,
                     shape: const StadiumBorder(),
                     padding: const EdgeInsets.symmetric(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fureverhome/views/main_base.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -19,7 +20,18 @@ class SearchPage extends StatelessWidget {
         ],
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {},
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushReplacement(
+                context, 
+                MaterialPageRoute(
+                  builder: (context) => const MainScreen(selectedIndex: 0),
+                ),
+              );
+            }
+          },
         ),
       ),
       body: Padding(
