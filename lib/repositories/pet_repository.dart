@@ -7,7 +7,8 @@ import 'package:fureverhome/models/breed.dart';
 
 class PetRepository {
   final DatabaseHelper _dbHelper = DatabaseHelper();
-  // Singleton pattern to ensure only one instance of PetRepository
+
+  // Insert a new pet along with its images
   Future<int> insertPet(PetDetail pet, List<PetImage> images) async {
     final db = await _dbHelper.database;
 
