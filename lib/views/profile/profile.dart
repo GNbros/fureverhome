@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fureverhome/views/create_pet_listing.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -26,12 +27,21 @@ class ProfilePage extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Saved Pets & Requests
+          // Saved Pets & Create listing
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _InfoCard(icon: Icons.favorite, title: "Saved Pets", count: 12),
-              _ActionCard(icon: Icons.add, title: "Add Pet"),
+              _ActionCard(icon: Icons.favorite, title: "Saved Pets"),
+              _ActionCard(
+                icon: Icons.add, 
+                title: "Add Pet", 
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const CreatePetListingPage())
+                  );
+                },
+              ),
             ],
           ),
           const SizedBox(height: 24),
@@ -67,54 +77,35 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-class _InfoCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final int count;
-
-  const _InfoCard({required this.icon, required this.title, required this.count});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      child: SizedBox(
-        width: 160,
-        height: 100,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.purple),
-            const SizedBox(height: 4),
-            Text(title),
-            Text(count.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class _ActionCard extends StatelessWidget {
   final IconData icon;
   final String title;
+  final VoidCallback? onTap;
 
-  const _ActionCard({required this.icon, required this.title});
+  const _ActionCard({
+    required this.icon,
+    required this.title,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      child: SizedBox(
-        width: 160,
-        height: 100,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.purple),
-            const SizedBox(height: 4),
-            Text(title)
-          ],
+    return InkWell(
+      onTap: onTap,
+      child: Card(
+        elevation: 2,
+        child: SizedBox(
+          width: 160,
+          height: 100,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: Colors.purple),
+              const SizedBox(height: 4),
+              Text(title),
+            ],
+          ),
         ),
       ),
     );

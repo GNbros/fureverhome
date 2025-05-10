@@ -14,9 +14,6 @@ class PetDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final genderColor = gender == 'Male' ? Colors.blue[100] : Colors.pink[100];
-    final genderTextColor = gender == 'Male' ? Colors.blue : Colors.pink;
-
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(color: Colors.black),
