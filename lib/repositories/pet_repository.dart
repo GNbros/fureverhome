@@ -27,8 +27,28 @@ class PetRepository {
   // Fetch all pets
   Future<List<PetDetail>> getAllPets() async {
     final db = await _dbHelper.database;
+
+    // Fetch part
     final List<Map<String, dynamic>> maps = await db.query('pet_details');
-    return List.generate(maps.length, (i) => PetDetail.fromMap(maps[i]));
+    final List<Map<String, dynamic>> imageMaps = await db.query(
+      'pet_images',
+      where: 'position = ?',
+      whereArgs: [1],
+      orderBy: 'pet_id ASC',
+    );
+
+    // Create a list of PetImage objects from the imageMaps
+    final List<PetImage> petImages = imageMaps.map((map) => PetImage.fromMap(map)).toList();
+    final List<PetDetail> pets = List.generate(maps.length, (i) {
+      final pet = PetDetail.fromMap(maps[i]);
+      // Find the corresponding image for the pet
+      final image = petImages.firstWhere((img) => img.petId == pet.id);
+      // Return a new PetDetail object with the image
+      return pet.copyWith(images: [image]);
+    });
+    
+    // Return the list of pets with their images
+    return pets;
   }
 
   // Fetch pet images by pet ID

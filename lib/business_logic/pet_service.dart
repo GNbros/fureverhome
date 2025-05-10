@@ -28,9 +28,14 @@ class PetService {
   // Add a new pet
   Future<int> addNewPet(PetDetail pet, List<PetImage> images) async {
     // Any business logic for adding a pet, like validation
-    if (pet.age < 0) {
+    if (pet.age < 0 ) {
       throw Exception('Age cannot be negative');
     }
+    // Ensure images are not empty
+    if (images.isEmpty || images[0].position != 1) {
+      throw Exception('At least one image is required or the first image must be at position 1');
+    }
+
     return await _petRepository.insertPet(pet, images);
   }
 
@@ -43,6 +48,14 @@ class PetService {
   // Update pet details
   Future<int> updatePetDetails(PetDetail pet) async {
     // Business validation or processing before updating
+    if (pet.age < 0) {
+      throw Exception('Age cannot be negative');
+    }
+    // Ensure images are not empty
+    if (pet.images[0].position != 1) {
+      throw Exception('At least one image is required or the first image must be at position 1');
+    }
+
     return await _petRepository.updatePet(pet);
   }
 
