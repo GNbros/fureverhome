@@ -3,9 +3,13 @@ import 'package:fureverhome/models/pet_image.dart';
 import 'package:fureverhome/models/pet_type.dart';
 import 'package:fureverhome/models/breed.dart';
 import 'package:fureverhome/repositories/pet_repository.dart';
+import 'package:fureverhome/repositories/pet_breed_repository.dart';
+import 'package:fureverhome/repositories/pet_type_repository.dart';
 
 class PetService {
   final PetRepository _petRepository = PetRepository();
+  final PetBreedRepository _petBreedRepository = PetBreedRepository();
+  final PetTypeRepository _petTypeRepository = PetTypeRepository();
 
   // Fetch all pets
   Future<List<PetDetail>> getAllPets() async {
@@ -61,11 +65,11 @@ class PetService {
 
   // Get all pet types
   Future<List<PetType>> getAllPetTypes() async {
-    return await _petRepository.getPetTypes();
+    return await _petTypeRepository.getPetTypes();
   }
 
   // Get breeds based on a specific pet type
   Future<List<Breed>> getBreedsByType(int typeId) async {
-    return await _petRepository.getPetBreeds(typeId);
+    return await _petBreedRepository.getPetBreeds(typeId);
   }
 }

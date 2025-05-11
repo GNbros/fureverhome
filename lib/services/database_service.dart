@@ -34,6 +34,17 @@ class DatabaseHelper {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
+    CREATE TABLE users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      firebase_uid TEXT NOT NULL UNIQUE,
+      name TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      address TEXT NOT NULL,
+      profile_picture BLOB
+    );
+    ''');
+
+    await db.execute('''
       CREATE TABLE pet_types (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL
@@ -62,8 +73,10 @@ class DatabaseHelper {
         is_kid_friendly INTEGER NOT NULL,
         description TEXT NOT NULL,
         location TEXT NOT NULL,
+        user_id INTEGER NOT NULL,
         FOREIGN KEY (type_id) REFERENCES pet_types(id),
-        FOREIGN KEY (breed_id) REFERENCES breeds(id)
+        FOREIGN KEY (breed_id) REFERENCES breeds(id),
+        FOREIGN KEY (user_id) REFERENCES users(id)
       );
     ''');
 

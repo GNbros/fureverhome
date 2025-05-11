@@ -12,8 +12,8 @@ class PetDetail {
   final bool isKidFriendly;
   final String description;
   final String location;
-  final List<PetImage> images;  // Added images field
-
+  final int userId; 
+  final List<PetImage> images;
 
   const PetDetail({
     required this.id,
@@ -27,10 +27,10 @@ class PetDetail {
     required this.isKidFriendly,
     required this.description,
     required this.location,
-    this.images = const [],  // Initialize with an empty list
+    required this.userId, 
+    this.images = const [],
   });
 
-  // CopyWith method to create a new instance with modified properties
   PetDetail copyWith({
     int? id,
     String? petName,
@@ -43,7 +43,8 @@ class PetDetail {
     bool? isKidFriendly,
     String? description,
     String? location,
-    List<PetImage>? images,  // Add images to copyWith
+    int? userId, 
+    List<PetImage>? images,
   }) {
     return PetDetail(
       id: id ?? this.id,
@@ -57,7 +58,8 @@ class PetDetail {
       isKidFriendly: isKidFriendly ?? this.isKidFriendly,
       description: description ?? this.description,
       location: location ?? this.location,
-      images: images ?? this.images,  // If no images provided, use current ones
+      userId: userId ?? this.userId,
+      images: images ?? this.images,
     );
   }
 
@@ -74,6 +76,7 @@ class PetDetail {
       'is_kid_friendly': isKidFriendly ? 1 : 0,
       'description': description,
       'location': location,
+      'user_id': userId,
     };
   }
 
@@ -90,7 +93,8 @@ class PetDetail {
       isKidFriendly: map['is_kid_friendly'] == 1,
       description: map['description'],
       location: map['location'],
-      images: [],  // Initialize with an empty list
+      userId: map['user_id'], // 🔹
+      images: [],
     );
   }
 }
