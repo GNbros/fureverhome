@@ -3,6 +3,7 @@ import 'package:fureverhome/views/profile/profile.dart';
 import 'home/home.dart';
 import '../views/search/search.dart';
 import '../widgets/custom_nav_bar.dart';
+import 'package:fureverhome/services/auth_service.dart';
 
 class MainScreen extends StatefulWidget {
   final int selectedIndex;
@@ -40,6 +41,12 @@ class _MainScreenState extends State<MainScreen> {
         ),
         actions: [
           IconButton(icon: Icon(Icons.favorite_border), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await AuthService().signout(context: context);
+            },
+          ),
         ],
         backgroundColor: Colors.white,
         elevation: 0,

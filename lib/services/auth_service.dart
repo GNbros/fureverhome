@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../pages/home/home.dart';
-import '../pages/login/login.dart';
+import '../views/home/home.dart';
+import '../views/auth/login.dart';
 
 class AuthService {
 
@@ -24,7 +24,7 @@ class AuthService {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => const Home()
+          builder: (BuildContext context) => const HomePage()
         )
       );
       
@@ -63,7 +63,7 @@ class AuthService {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => const Home()
+          builder: (BuildContext context) => const HomePage()
         )
       );
       

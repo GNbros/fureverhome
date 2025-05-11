@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fureverhome/views/main_base.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fureverhome/views/auth/login.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -7,6 +9,21 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
+    // Redirect to Login if not authenticated
+    if (user == null) {
+      Future.microtask(() {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Login()),
+        );
+      });
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

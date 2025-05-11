@@ -1,4 +1,4 @@
-import 'package:fureverhome/pages/signup/signup.dart';
+import 'package:fureverhome/views/auth/signup.dart';
 import 'package:fureverhome/services/auth_service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
