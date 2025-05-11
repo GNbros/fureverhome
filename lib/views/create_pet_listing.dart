@@ -113,6 +113,14 @@ class CreatePetListingPage extends StatelessWidget {
               maxLines: 3,
             ),
 
+            const SizedBox(height: 16),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: "Location",
+                hintText: "Enter your location",
+              ),
+            ),
+
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,

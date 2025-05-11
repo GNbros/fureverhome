@@ -73,7 +73,7 @@ class PetDetailsPage extends StatelessWidget {
 
                 // Additional Info
                 _buildDetailTile(Icons.pets, "Breed", breed),
-                _buildDetailTile(Icons.health_and_safety, "Health", "Vaccinated, Dewormed, Healthy"),
+                _buildDetailTile(Icons.health_and_safety, "Healthy", "Vaccinated, Dewormed"),
                 _buildDetailTile(Icons.location_on, "Location", "San Francisco, CA"),
                 const SizedBox(height: 20),
 
