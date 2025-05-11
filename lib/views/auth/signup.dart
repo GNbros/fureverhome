@@ -19,104 +19,106 @@ class Signup extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        toolbarHeight: 50,
+        toolbarHeight: 80,
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            margin: const EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+              color: Colors.amber.shade100,
+              shape: BoxShape.circle,
+            ),
+            child: const Center(
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-         padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: Text(
-                  'Register Account',
+                  'Register Account 🐶',
                   style: GoogleFonts.raleway(
-                    textStyle: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 32
-                    )
+                    fontSize: 30,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.black,
                   ),
                 ),
               ),
-              const SizedBox(height: 80,),
-               _emailAddress(),
-               const SizedBox(height: 20,),
-               _password(),
-               const SizedBox(height: 50,),
-               _signup(context),
+              const SizedBox(height: 60),
+              _emailAddress(),
+              const SizedBox(height: 20),
+              _password(),
+              const SizedBox(height: 40),
+              _signup(context),
             ],
           ),
-
+        ),
       ),
-      )
     );
   }
 
   Widget _emailAddress() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Email Address',
           style: GoogleFonts.raleway(
-            textStyle: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.normal,
-              fontSize: 16
-            )
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 16,),
+        const SizedBox(height: 10),
         TextField(
           controller: _emailController,
           decoration: InputDecoration(
             filled: true,
-            hintText: 'mahdiforwork@gmail.com',
-            hintStyle: const TextStyle(
-              color: Color(0xff6A6A6A),
-              fontWeight: FontWeight.normal,
-              fontSize: 14
-            ),
-            fillColor: const Color(0xffF7F7F9) ,
+            hintText: 'you@example.com',
+            hintStyle: const TextStyle(color: Colors.grey),
+            fillColor: Colors.amber.shade50,
             border: OutlineInputBorder(
               borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(14)
-            )
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
-        )
+        ),
       ],
     );
   }
 
   Widget _password() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Password',
           style: GoogleFonts.raleway(
-            textStyle: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.normal,
-              fontSize: 16
-            )
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 16,),
+        const SizedBox(height: 10),
         TextField(
           controller: _passwordController,
           obscureText: true,
           decoration: InputDecoration(
             filled: true,
-            fillColor: const Color(0xffF7F7F9) ,
+            fillColor: Colors.amber.shade50,
             border: OutlineInputBorder(
               borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(14)
-            )
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -124,18 +126,19 @@ class Signup extends StatelessWidget {
   Widget _signup(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xff0D6EFD),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-          minimumSize: const Size(double.infinity, 60),
-          elevation: 0,
+        backgroundColor: Colors.amber.shade700,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+        ),
+        minimumSize: const Size(double.infinity, 55),
+        elevation: 2,
       ),
       onPressed: () async {
-       await AuthService().signup(
+        await AuthService().signup(
           email: _emailController.text,
           password: _passwordController.text,
-          context: context
+          context: context,
         );
       },
       child: const Text("Sign Up"),
@@ -149,32 +152,30 @@ class Signup extends StatelessWidget {
         textAlign: TextAlign.center,
         text: TextSpan(
           children: [
-            const TextSpan(
-                text: "Already Have Account? ",
-                style: TextStyle(
-                  color: Color(0xff6A6A6A),
-                  fontWeight: FontWeight.normal,
-                  fontSize: 16
-                ),
+            TextSpan(
+              text: "Already have an account? ",
+              style: GoogleFonts.raleway(
+                color: Colors.grey.shade700,
+                fontSize: 14,
               ),
-              TextSpan(
-                text: "Log In",
-                style: const TextStyle(
-                    color: Color(0xff1A1D1E),
-                    fontWeight: FontWeight.normal,
-                    fontSize: 16
-                  ),
-                  recognizer: TapGestureRecognizer()..onTap = () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Login()
-                      ),
-                    );
-                  }
+            ),
+            TextSpan(
+              text: "Log In",
+              style: GoogleFonts.raleway(
+                color: Colors.amber.shade800,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
               ),
-          ]
-        )
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                  );
+                },
+            ),
+          ],
+        ),
       ),
     );
   }
