@@ -11,6 +11,7 @@ class PetService {
   final PetBreedRepository _petBreedRepository = PetBreedRepository();
   final PetTypeRepository _petTypeRepository = PetTypeRepository();
 
+  // Pet detail
   // Fetch all pets
   Future<List<PetDetail>> getAllPets() async {
     // Any additional logic, for example, filtering or sorting
@@ -63,6 +64,8 @@ class PetService {
     return await _petRepository.updatePet(pet);
   }
 
+
+  // Pet type
   // Get all pet types
   Future<List<PetType>> getAllPetTypes() async {
     return await _petTypeRepository.getPetTypes();
@@ -72,4 +75,42 @@ class PetService {
   Future<List<Breed>> getBreedsByType(int typeId) async {
     return await _petBreedRepository.getPetBreeds(typeId);
   }
+
+  // Add a new pet type
+  Future<int> addNewPetType(PetType petType) async {
+    return await _petTypeRepository.insertPetType(petType);
+  }
+
+  // Update an existing pet type
+  Future<int> updatePetType(PetType petType) async {
+    return await _petTypeRepository.updatePetType(petType);
+  }
+
+  // Delete a pet type
+  Future<int> deletePetType(int typeId) async {
+    return await _petTypeRepository.deletePetType(typeId);
+  }
+
+
+  // Pet breed
+  // Get all breeds based on a specific pet type
+  Future<List<Breed>> getAllBreeds(int typeId) async {
+    return await _petBreedRepository.getPetBreeds(typeId);
+  }
+
+  // Add a new breed
+  Future<int> addNewBreed(Breed breed) async {
+    return await _petBreedRepository.insertBreed(breed);
+  }
+
+  // Update an existing breed
+  Future<int> updateBreed(Breed breed) async {
+    return await _petBreedRepository.updateBreed(breed);
+  }
+
+  // Delete a breed
+  Future<int> deleteBreed(int breedId) async {
+    return await _petBreedRepository.deleteBreed(breedId);
+  }
+
 }
