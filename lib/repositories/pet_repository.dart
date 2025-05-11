@@ -1,9 +1,6 @@
 import 'package:fureverhome/services/database_service.dart';
 import 'package:fureverhome/models/pet_detail.dart';
 import 'package:fureverhome/models/pet_image.dart';
-import 'package:fureverhome/models/pet_type.dart';
-import 'package:fureverhome/models/breed.dart';
-
 
 class PetRepository {
   final DatabaseHelper _dbHelper = DatabaseHelper();
@@ -139,28 +136,6 @@ class PetRepository {
     }
 
     return result;
-  }
-
-  // Fetch all pet types
-  Future<List<PetType>> getPetTypes() async {
-    final db = await _dbHelper.database;
-    final List<Map<String, dynamic>> typeMaps = await db.query('types');
-    return List.generate(typeMaps.length, (i) {
-      return PetType.fromMap(typeMaps[i]);
-    });
-  }
-
-  // Fetch breeds for a specific pet type
-  Future<List<Breed>> getPetBreeds(int typeId) async {
-    final db = await _dbHelper.database;
-    final List<Map<String, dynamic>> breedMaps = await db.query(
-      'breeds',
-      where: 'type_id = ?',
-      whereArgs: [typeId],
-    );
-    return List.generate(breedMaps.length, (i) {
-      return Breed.fromMap(breedMaps[i]);
-    });
   }
 
 }
