@@ -64,6 +64,11 @@ class PetService {
     return await _petRepository.updatePet(pet);
   }
 
+  // Fetch all bulk pet details based on ID
+  Future<List<PetDetail>> getBulkPetDetails(List<int> petIds) async {
+    // Any additional logic, for example, filtering or sorting
+    return await _petRepository.getBulkPets(petIds);
+  }
 
   // Pet type
   // Get all pet types

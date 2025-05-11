@@ -89,6 +89,16 @@ class DatabaseHelper {
         FOREIGN KEY (pet_id) REFERENCES pet_details(id) ON DELETE CASCADE
       );
     ''');
+
+    await db.execute('''
+      CREATE TABLE user_favorites (
+        user_id INTEGER NOT NULL,
+        pet_id INTEGER NOT NULL,
+        PRIMARY KEY (user_id, pet_id),
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (pet_id) REFERENCES pet_details(id) ON DELETE CASCADE
+      );
+    ''');
   }
 
   // Optional: method to close database

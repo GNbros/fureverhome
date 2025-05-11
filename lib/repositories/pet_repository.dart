@@ -138,4 +138,38 @@ class PetRepository {
     return result;
   }
 
+  // Fetch bulk pet details by IDs
+  Future<List<PetDetail>> getBulkPets(List<int> petIds) async {
+    final db = await _dbHelper.database;
+
+    // Fetch pet details
+    final List<Map<String, dynamic>> petMaps = await db.query(
+      'pet_details',
+      where: 'id IN (${petIds.join(',')})',
+    );
+
+    // Fetch pet images only position 1
+    final List<Map<String, dynamic>> imageMaps = await db.query(
+      'pet_images',
+      where: 'pet_id IN (${petIds.join(',')}) AND position = ?',
+      whereArgs: [1],
+      orderBy: 'pet_id ASC',
+    );
+    
+    // Create a map of pet images for quick lookup
+    final Map<int, List<PetImage>> petImagesMap = {};
+    for (var map in imageMaps) {
+      final image = PetImage.fromMap(map);
+      if (!petImagesMap.containsKey(image.petId)) {
+        petImagesMap[image.petId] = [];
+      }
+      petImagesMap[image.petId]!.add(image);
+    }
+
+    // Create a list of PetDetail objects with their images
+    return List.generate(petMaps.length, (i) {
+      final pet = PetDetail.fromMap(petMaps[i]);
+      return pet.copyWith(images: petImagesMap[pet.id] ?? []);
+    });
+  }
 }
