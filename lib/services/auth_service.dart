@@ -44,10 +44,6 @@ class AuthService {
         fontSize: 14.0,
       );
     }
-    catch(e){
-
-    }
-
   }
 
   Future<void> signin({
@@ -87,10 +83,6 @@ class AuthService {
         fontSize: 14.0,
       );
     }
-    catch(e){
-
-    }
-
   }
 
   Future<void> signout({
