@@ -172,4 +172,65 @@ class PetRepository {
       return pet.copyWith(images: petImagesMap[pet.id] ?? []);
     });
   }
+
+  // Search
+  Future<List<PetDetail>> searchPets({
+    String? name,
+    int? typeId,
+    int? breedId,
+    String? gender,
+    bool? isVaccinated,
+    bool? isSpayed,
+    bool? isKidFriendly,
+    int? age,
+  }) async {
+  final db = await _dbHelper.database;
+
+  final whereClauses = <String>[];
+  final whereArgs = <dynamic>[];
+
+  if (name != null && name.isNotEmpty) {
+    whereClauses.add("pet_name LIKE ?");
+    whereArgs.add('%$name%');
+  }
+  if (typeId != null) {
+    whereClauses.add("type_id = ?");
+    whereArgs.add(typeId);
+  }
+  if (breedId != null) {
+    whereClauses.add("breed_id = ?");
+    whereArgs.add(breedId);
+  }
+  if (gender != null && gender.isNotEmpty) {
+    whereClauses.add("gender = ?");
+    whereArgs.add(gender);
+  }
+  if (isVaccinated != null) {
+    whereClauses.add("is_vaccinated = ?");
+    whereArgs.add(isVaccinated ? 1 : 0);
+  }
+  if (isSpayed != null) {
+    whereClauses.add("is_spayed = ?");
+    whereArgs.add(isSpayed ? 1 : 0);
+  }
+  if (isKidFriendly != null) {
+    whereClauses.add("is_kid_friendly = ?");
+    whereArgs.add(isKidFriendly ? 1 : 0);
+  }
+  if (age != null) {
+    whereClauses.add("age = ?");
+    whereArgs.add(age);
+  }
+
+  final whereString = whereClauses.isNotEmpty ? 'WHERE ${whereClauses.join(' AND ')}' : '';
+
+  final result = await db.rawQuery('''
+    SELECT * FROM pet_details
+    $whereString
+    ORDER BY datetime(created_at) DESC
+  ''', whereArgs);
+
+  return result.map((map) => PetDetail.fromMap(map)).toList();
+}
+
 }

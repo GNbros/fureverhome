@@ -14,6 +14,7 @@ class PetDetail {
   final String location;
   final int userId; 
   final List<PetImage> images;
+  final DateTime? createdAt;
 
   const PetDetail({
     required this.id,
@@ -29,6 +30,7 @@ class PetDetail {
     required this.location,
     required this.userId, 
     this.images = const [],
+    this.createdAt,
   });
 
   PetDetail copyWith({
@@ -45,6 +47,7 @@ class PetDetail {
     String? location,
     int? userId, 
     List<PetImage>? images,
+    DateTime? createdAt,
   }) {
     return PetDetail(
       id: id ?? this.id,
@@ -60,6 +63,7 @@ class PetDetail {
       location: location ?? this.location,
       userId: userId ?? this.userId,
       images: images ?? this.images,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -77,6 +81,7 @@ class PetDetail {
       'description': description,
       'location': location,
       'user_id': userId,
+      'created_at': createdAt?.toIso8601String(),
     };
   }
 
@@ -95,6 +100,9 @@ class PetDetail {
       location: map['location'],
       userId: map['user_id'], // 🔹
       images: [],
+      createdAt: map['created_at'] != null
+          ? DateTime.tryParse(map['created_at'])
+          : null,
     );
   }
 }

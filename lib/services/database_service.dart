@@ -1,4 +1,4 @@
-import 'package:sqflite/sqflite.dart';
+ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -74,6 +74,7 @@ class DatabaseHelper {
         description TEXT NOT NULL,
         location TEXT NOT NULL,
         user_id INTEGER NOT NULL,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (type_id) REFERENCES pet_types(id),
         FOREIGN KEY (breed_id) REFERENCES breeds(id),
         FOREIGN KEY (user_id) REFERENCES users(id)

@@ -11,6 +11,29 @@ class PetService {
   final PetBreedRepository _petBreedRepository = PetBreedRepository();
   final PetTypeRepository _petTypeRepository = PetTypeRepository();
 
+  // Search for pets
+  Future<List<PetDetail>> searchPets({
+    String? name,
+    int? typeId,
+    int? breedId,
+    String? gender,
+    bool? isVaccinated,
+    bool? isSpayed,
+    bool? isKidFriendly,
+    int? age,
+  }) {
+    return _petRepository.searchPets(
+      name: name,
+      typeId: typeId,
+      breedId: breedId,
+      gender: gender,
+      isVaccinated: isVaccinated,
+      isSpayed: isSpayed,
+      isKidFriendly: isKidFriendly,
+      age: age,
+    );
+  }
+
   // Pet detail
   // Fetch all pets
   Future<List<PetDetail>> getAllPets() async {
@@ -69,6 +92,7 @@ class PetService {
     // Any additional logic, for example, filtering or sorting
     return await _petRepository.getBulkPets(petIds);
   }
+
 
   // Pet type
   // Get all pet types
