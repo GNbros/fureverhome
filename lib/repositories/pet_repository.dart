@@ -1,6 +1,8 @@
 import 'package:fureverhome/services/database_service.dart';
 import 'package:fureverhome/models/pet_detail.dart';
 import 'package:fureverhome/models/pet_image.dart';
+import 'package:fureverhome/models/pet_type.dart';
+import 'package:fureverhome/models/breed.dart';
 
 class PetRepository {
   final DatabaseHelper _dbHelper = DatabaseHelper();
@@ -232,5 +234,17 @@ class PetRepository {
 
   return result.map((map) => PetDetail.fromMap(map)).toList();
 }
+
+  // helper function to get pet types and breeds
+  Future<List<PetDetail>> mapTypeBreed(List<PetDetail> pet, List<Breed> petBreeds, List<PetType> petTypes) async {
+    
+    for (var i = 0; i < pet.length; i++) {
+      final type = petTypes.firstWhere((type) => type.id == pet[i].typeId);
+      final breed = petBreeds.firstWhere((breed) => breed.id == pet[i].breedId);
+
+      pet[i] = pet[i].copyWith(petType: type.name, petBreed: breed.name);
+    }
+    return pet;
+  }
 
 }

@@ -4,6 +4,29 @@ import 'package:fureverhome/models/breed.dart';
 class PetBreedRepository {
   final DatabaseHelper _dbHelper = DatabaseHelper();
 
+  // Fetch all breeds
+  Future<List<Breed>> getAllBreeds() async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> breedMaps = await db.query('breeds');
+    return List.generate(breedMaps.length, (i) {
+      return Breed.fromMap(breedMaps[i]);
+    });
+  }
+
+  // Fetch a breed by ID
+  Future<Breed?> getBreedById(int id) async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'breeds',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (maps.isNotEmpty) {
+      return Breed.fromMap(maps.first);
+    }
+    return null;
+  }
+
   // Fetch breeds for a specific pet type
   Future<List<Breed>> getPetBreeds(int typeId) async {
     final db = await _dbHelper.database;

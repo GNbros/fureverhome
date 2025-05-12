@@ -3,7 +3,9 @@ import 'package:fureverhome/models/pet_image.dart';
 class PetDetail {
   final int id;
   final String petName;
+  final String petType;
   final int typeId;
+  final String petBreed;
   final int breedId;
   final int age;
   final String gender;
@@ -29,6 +31,8 @@ class PetDetail {
     required this.description,
     required this.location,
     required this.userId, 
+    this.petType = '',
+    this.petBreed = '',
     this.images = const [],
     this.createdAt,
   });
@@ -36,7 +40,9 @@ class PetDetail {
   PetDetail copyWith({
     int? id,
     String? petName,
+    String? petType,
     int? typeId,
+    String? petBreed,
     int? breedId,
     int? age,
     String? gender,
@@ -52,7 +58,9 @@ class PetDetail {
     return PetDetail(
       id: id ?? this.id,
       petName: petName ?? this.petName,
+      petType: petType ?? this.petType,
       typeId: typeId ?? this.typeId,
+      petBreed: petBreed ?? this.petBreed,
       breedId: breedId ?? this.breedId,
       age: age ?? this.age,
       gender: gender ?? this.gender,
@@ -71,7 +79,9 @@ class PetDetail {
     return {
       'id': id,
       'pet_name': petName,
+      'pet_type': petType,
       'type_id': typeId,
+      'pet_breed': petBreed,
       'breed_id': breedId,
       'age': age,
       'gender': gender,
@@ -89,7 +99,9 @@ class PetDetail {
     return PetDetail(
       id: map['id'],
       petName: map['pet_name'],
+      petType: map['pet_type'] ?? '',
       typeId: map['type_id'],
+      petBreed: map['pet_breed'] ?? '',
       breedId: map['breed_id'],
       age: map['age'],
       gender: map['gender'],

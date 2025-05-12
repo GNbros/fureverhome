@@ -7,7 +7,7 @@ import 'package:fureverhome/repositories/pet_breed_repository.dart';
 import 'package:fureverhome/repositories/pet_type_repository.dart';
 
 class PetService {
-    // Private constructor
+  // Private constructor
   PetService._internal();
 
   // Singleton instance
@@ -15,7 +15,7 @@ class PetService {
 
   // Factory constructor returns the same instance
   factory PetService() => _instance;
-  
+
   final PetRepository _petRepository = PetRepository();
   final PetBreedRepository _petBreedRepository = PetBreedRepository();
   final PetTypeRepository _petTypeRepository = PetTypeRepository();
@@ -30,8 +30,9 @@ class PetService {
     bool? isSpayed,
     bool? isKidFriendly,
     int? age,
-  }) {
-    return _petRepository.searchPets(
+  }) async {
+
+    final pet = await _petRepository.searchPets(
       name: name,
       typeId: typeId,
       breedId: breedId,
@@ -41,13 +42,20 @@ class PetService {
       isKidFriendly: isKidFriendly,
       age: age,
     );
+    final petBreeds = await _petBreedRepository.getAllBreeds();
+    final petTypes = await _petTypeRepository.getPetTypes();
+
+    return await _petRepository.mapTypeBreed(pet, petBreeds, petTypes);
   }
 
   // Pet detail
   // Fetch all pets
   Future<List<PetDetail>> getAllPets() async {
     // Any additional logic, for example, filtering or sorting
-    return await _petRepository.getAllPets();
+    final pet = await _petRepository.getAllPets();
+    final petBreeds = await _petBreedRepository.getAllBreeds();
+    final petTypes = await _petTypeRepository.getPetTypes();
+    return await _petRepository.mapTypeBreed(pet, petBreeds, petTypes);
   }
 
   // Fetch pet images by pet ID
@@ -59,18 +67,34 @@ class PetService {
   // Fetch a pet by its ID (including its images)
   Future<PetDetail?> getPetDetails(int petId) async {
     // Any additional logic, for example, logging, validation, etc.
-    return await _petRepository.getPet(petId);
+    final pet = await _petRepository.getPet(petId);
+
+    if (pet == null) {
+      return null;
+    }
+    final petBreeds = await _petBreedRepository.getBreedById(pet.breedId);
+    final petTypes = await _petTypeRepository.getPetTypeById(pet.typeId);
+
+    if (petBreeds == null || petTypes == null) {
+      return null;
+    }
+
+    return await _petRepository
+        .mapTypeBreed([pet], [petBreeds], [petTypes])
+        .then((mappedPets) => mappedPets.isNotEmpty ? mappedPets[0] : null);
   }
 
   // Add a new pet
   Future<int> addNewPet(PetDetail pet, List<PetImage> images) async {
     // Any business logic for adding a pet, like validation
-    if (pet.age < 0 ) {
+    if (pet.age < 0) {
       throw Exception('Age cannot be negative');
     }
     // Ensure images are not empty
     if (images.isEmpty || images[0].position != 1) {
-      throw Exception('At least one image is required or the first image must be at position 1');
+      throw Exception(
+        'At least one image is required or the first image must be at position 1',
+      );
     }
 
     return await _petRepository.insertPet(pet, images);
@@ -90,7 +114,9 @@ class PetService {
     }
     // Ensure images are not empty
     if (pet.images[0].position != 1) {
-      throw Exception('At least one image is required or the first image must be at position 1');
+      throw Exception(
+        'At least one image is required or the first image must be at position 1',
+      );
     }
 
     return await _petRepository.updatePet(pet);
@@ -101,7 +127,6 @@ class PetService {
     // Any additional logic, for example, filtering or sorting
     return await _petRepository.getBulkPets(petIds);
   }
-
 
   // Pet type
   // Get all pet types
@@ -129,7 +154,6 @@ class PetService {
     return await _petTypeRepository.deletePetType(typeId);
   }
 
-
   // Pet breed
   // Get all breeds based on a specific pet type
   Future<List<Breed>> getAllBreeds(int typeId) async {
@@ -150,5 +174,4 @@ class PetService {
   Future<int> deleteBreed(int breedId) async {
     return await _petBreedRepository.deleteBreed(breedId);
   }
-
 }
