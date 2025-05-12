@@ -32,7 +32,10 @@ class PetRepository {
     final db = await _dbHelper.database;
 
     // Fetch part
-    final List<Map<String, dynamic>> maps = await db.query('pet_details');
+    final List<Map<String, dynamic>> maps = await db.query(
+      'pet_details',
+      orderBy: 'id DESC',
+      );
     final List<Map<String, dynamic>> imageMaps = await db.query(
       'pet_images',
       where: 'position = ?',
@@ -245,7 +248,7 @@ class PetRepository {
     for (var i = 0; i < pet.length; i++) {
       final type = petTypes.firstWhere((type) => type.id == pet[i].typeId);
       final breed = petBreeds.firstWhere((breed) => breed.id == pet[i].breedId);
-
+      
       pet[i] = pet[i].copyWith(petType: type.name, petBreed: breed.name);
     }
     return pet;

@@ -2,7 +2,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fureverhome/models/pet_detail.dart';
-import 'package:fureverhome/models/pet_image.dart';
 import 'package:fureverhome/models/pet_type.dart';
 import 'package:fureverhome/models/breed.dart';
 import 'package:fureverhome/business_logic/pet_service.dart';

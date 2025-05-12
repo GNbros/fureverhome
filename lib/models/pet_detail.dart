@@ -77,7 +77,6 @@ class PetDetail {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'pet_name': petName,
       'type_id': typeId,
       'breed_id': breedId,
