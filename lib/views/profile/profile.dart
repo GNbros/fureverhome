@@ -39,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
           address = user.address;
           picture = user.profilePicture; // Should be stored as base64 or bytes
         });
-        debugPrint("User data loaded: $picture");
+        // debugPrint("User data loaded: $picture");
       }
     } catch (e) {
       debugPrint("Failed to load user: $e");

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:fureverhome/services/database_service.dart';
 import 'package:fureverhome/models/pet_detail.dart';
 import 'package:fureverhome/models/pet_image.dart';
@@ -8,18 +10,20 @@ class PetRepository {
   final DatabaseHelper _dbHelper = DatabaseHelper();
 
   // Insert a new pet along with its images
-  Future<int> insertPet(PetDetail pet, List<PetImage> images) async {
-    final db = await _dbHelper.database;
+  Future<int> insertPet(PetDetail pet, List<Uint8List> imageBlobs) async {
+  final db = await _dbHelper.database;
 
-    return await db.transaction((txn) async {
-      final petId = await txn.insert('pet_details', pet.toMap());
+  return await db.transaction((txn) async {
+    final petId = await txn.insert('pet_details', pet.toMap());
 
-      for (var i = 0; i < images.length; i++) {
-
-        await txn.insert('pet_images', images[i].copyWith(petId: petId, position: i + 1).toMap());
-      }
-
-      return petId;
+    for (var i = 0; i < imageBlobs.length; i++) {
+      await txn.insert('pet_images', {
+        'pet_id': petId,
+        'image': imageBlobs[i],
+        'position': i + 1,
+      });
+    }
+    return petId;
     });
   }
   

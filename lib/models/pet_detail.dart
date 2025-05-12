@@ -79,9 +79,7 @@ class PetDetail {
     return {
       'id': id,
       'pet_name': petName,
-      'pet_type': petType,
       'type_id': typeId,
-      'pet_breed': petBreed,
       'breed_id': breedId,
       'age': age,
       'gender': gender,
@@ -99,9 +97,7 @@ class PetDetail {
     return PetDetail(
       id: map['id'],
       petName: map['pet_name'],
-      petType: map['pet_type'] ?? '',
       typeId: map['type_id'],
-      petBreed: map['pet_breed'] ?? '',
       breedId: map['breed_id'],
       age: map['age'],
       gender: map['gender'],

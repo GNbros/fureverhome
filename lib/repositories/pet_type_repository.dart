@@ -44,7 +44,7 @@ class PetTypeRepository {
   Future<PetType?> getPetTypeById(int id) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db.query(
-      'types',
+      'pet_types',
       where: 'id = ?',
       whereArgs: [id],
     );

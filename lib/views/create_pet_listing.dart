@@ -132,14 +132,7 @@ class _CreatePetListingPageState extends State<CreatePetListingPage> {
         images: [],
       );
 
-      List<PetImage> petImages = _selectedImages.asMap().entries.map((entry) {
-        return PetImage(
-          id: 0,
-          petId: 0,
-          image: entry.value,
-          position: entry.key + 1,
-        );
-      }).toList();
+      List<Uint8List> petImages = _selectedImages;
 
       await _petService.addNewPet(newPet, petImages);
 

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:fureverhome/models/pet_detail.dart';
 import 'package:fureverhome/models/pet_image.dart';
 import 'package:fureverhome/models/pet_type.dart';
@@ -85,13 +87,13 @@ class PetService {
   }
 
   // Add a new pet
-  Future<int> addNewPet(PetDetail pet, List<PetImage> images) async {
+  Future<int> addNewPet(PetDetail pet, List<Uint8List> images) async {
     // Any business logic for adding a pet, like validation
     if (pet.age < 0) {
       throw Exception('Age cannot be negative');
     }
     // Ensure images are not empty
-    if (images.isEmpty || images[0].position != 1) {
+    if (images.isEmpty) {
       throw Exception(
         'At least one image is required or the first image must be at position 1',
       );
