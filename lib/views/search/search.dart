@@ -1,14 +1,19 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:fureverhome/views/main_base.dart';
-import 'package:fureverhome/views/search/pet_details.dart';
+import 'package:fureverhome/business_logic/pet_service.dart'; 
+import 'package:fureverhome/models/pet_detail.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final categories = ['All Pets', 'Dogs', 'Cats', 'Birds', 'Others'];
+    final categories = ['All Pets', 'Dogs', 'Cats'];
     final selectedCategory = 'All Pets';
+
+    final PetService petService = PetService();
 
     return Scaffold(
       appBar: AppBar(
@@ -19,25 +24,11 @@ class SearchPage extends StatelessWidget {
             onPressed: () {},
           )
         ],
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            } else {
-              Navigator.pushReplacement(
-                context, 
-                MaterialPageRoute(
-                  builder: (context) => const MainScreen(selectedIndex: 0),
-                ),
-              );
-            }
-          },
-        ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Search Bar
             TextField(
@@ -83,26 +74,36 @@ class SearchPage extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Pet Cards
-            Expanded(
-              child: ListView(
-                children: const [
-                  PetCard(
-                    name: 'Max',
-                    breed: 'Golden Retriever',
-                    age: '8 months',
-                    gender: 'Male',
-                    imageUrl: 'https://i.imgur.com/QwhZRyL.png',
-                  ),
-                  PetCard(
-                    name: 'Luna',
-                    breed: 'Maltest',
-                    age: '1.5 years',
-                    gender: 'Female',
-                    imageUrl: 'https://i.imgur.com/tGbaZCY.jpg',
-                  ),
-                ],
-              ),
-            )
+            FutureBuilder<List<PetDetail>>(
+              future: petService.getAllPets(), // Fetch all pets
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No pets found.'));
+                }
+
+                final pets = snapshot.data!;
+
+                return Column(
+                  children: pets.map<Widget>((pet) {
+                    return PetCard(
+                      name: pet.petName,
+                      breed: pet.petBreed,
+                      age: pet.age.toString() + ' year(s)',
+                      gender: pet.gender.toString(),
+                      image: pet.images.first.image,
+                    );
+                  }).toList(),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -111,7 +112,8 @@ class SearchPage extends StatelessWidget {
 }
 
 class PetCard extends StatelessWidget {
-  final String name, breed, age, gender, imageUrl;
+  final String name, breed, age, gender;
+  final Uint8List image;
 
   const PetCard({
     super.key,
@@ -119,7 +121,7 @@ class PetCard extends StatelessWidget {
     required this.breed,
     required this.age,
     required this.gender,
-    required this.imageUrl,
+    required this.image,
   });
 
   @override
@@ -129,20 +131,20 @@ class PetCard extends StatelessWidget {
 
     return 
     GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PetDetailsPage(
-              name: name,
-              breed: breed,
-              age: age,
-              gender: gender,
-              imageUrl: imageUrl,
-            ),
-          ),
-        );
-      },
+      // onTap: () {
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => PetDetailsPage(
+      //         name: name,
+      //         breed: breed,
+      //         age: age,
+      //         gender: gender,
+      //         imageUrl: image,
+      //       ),
+      //     ),
+      //   );
+      // },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         margin: const EdgeInsets.only(bottom: 16),
@@ -154,7 +156,7 @@ class PetCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                  child: Image.network(imageUrl, height: 180, width: double.infinity, fit: BoxFit.cover),
+                  child: Image.memory(image, height: 180, width: double.infinity, fit: BoxFit.cover),
                 ),
                 Positioned(
                   top: 8,

@@ -85,8 +85,9 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 8,
                   children: const [
                     Chip(label: Text("Dogs")),
                     Chip(label: Text("Cats")),
