@@ -6,6 +6,8 @@ import 'package:fureverhome/models/pet_image.dart';
 import 'package:fureverhome/models/pet_type.dart';
 import 'package:fureverhome/models/breed.dart';
 import 'package:fureverhome/business_logic/pet_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fureverhome/business_logic/user_service.dart';
 
 class CreatePetListingPage extends StatefulWidget {
   @override
@@ -39,11 +41,37 @@ class _CreatePetListingPageState extends State<CreatePetListingPage> {
   // Images
   List<Uint8List> _selectedImages = [];
 
+  bool isLoading = false;
+  int? userId;
+
+  Future<void> fetchUserData() async {
+    setState(() => isLoading = true);
+
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+
+    try {
+      final user = await UserService().getUserByFirebaseUid(currentUser.uid);
+
+      if (user != null) {
+        setState(() {
+          userId = user.id;
+        });
+      }
+    } catch (e) {
+      debugPrint("Failed to load user: $e");
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    fetchUserData();
     _loadTypesAndBreeds();
   }
+  
 
   Future<void> _loadTypesAndBreeds() async {
     try {
@@ -77,7 +105,7 @@ class _CreatePetListingPageState extends State<CreatePetListingPage> {
   }
 
   Future<void> _submitPetForm() async {
-    if (_selectedType == null || _selectedBreed == null) {
+    if (_selectedType == null || _selectedBreed == null || userId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select a valid type and breed.")),
       );
@@ -89,7 +117,7 @@ class _CreatePetListingPageState extends State<CreatePetListingPage> {
     try {
       PetDetail newPet = PetDetail(
         id: 0,
-        userId: 1, // Replace with real user ID
+        userId: userId!,
         petName: _nameController.text,
         age: int.parse(_ageController.text),
         gender: _selectedGender,
