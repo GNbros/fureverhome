@@ -55,6 +55,6 @@ class UserService {
 
   Future<UserDetail?> getUserByFirebaseUid(String uid) async {
   return await _userRepository.getUserByFirebaseUid(uid);
-}
+  }
 
 }

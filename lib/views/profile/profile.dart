@@ -3,12 +3,15 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:fureverhome/views/create_pet_listing.dart';
 import 'package:fureverhome/business_logic/user_service.dart';
+import 'package:fureverhome/business_logic/pet_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fureverhome/models/pet_detail.dart';
+import 'package:fureverhome/views/search/pet_details.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
-   @override
+  @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
@@ -20,6 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String? uid;
   Uint8List? picture;
   bool isLoading = false;
+  List<PetDetail> userPets = []; 
 
   Future<void> fetchUserData() async {
     setState(() => isLoading = true);
@@ -37,9 +41,16 @@ class _ProfilePageState extends State<ProfilePage> {
           name = user.name;
           phone = user.phone;
           address = user.address;
-          picture = user.profilePicture; // Should be stored as base64 or bytes
+          picture = user.profilePicture;
         });
-        // debugPrint("User data loaded: $picture");
+        
+        // Fetch pets associated with the user
+        if (userId != null) {
+          final pets = await PetService().getPetsCreatedByUser(int.parse(userId!));
+          setState(() {
+            userPets = pets; 
+          });
+        }
       }
     } catch (e) {
       debugPrint("Failed to load user: $e");
@@ -81,53 +92,56 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 24),
 
-          // Saved Pets & Create listing
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _ActionCard(icon: Icons.favorite, title: "Saved Pets"),
-              _ActionCard(
-                icon: Icons.add, 
-                title: "Add Pet", 
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => CreatePetListingPage())
-                  );
-                },
+              // Saved Pets & Create listing
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _ActionCard(
+                    icon: Icons.add, 
+                    title: "Add Pet", 
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => CreatePetListingPage())
+                      );
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-          // My Listings
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text("My Listings", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-              Text("View All", style: TextStyle(color: Colors.blue)),
+              // My Listings
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text("My Listings", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // Display the user's pets dynamically
+              if (userPets.isEmpty)
+                const Center(child: Text("You have no pets listed."))
+              else
+                ...userPets.map((pet) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => PetDetailsPage(id: pet.id)),
+                      );
+                    },
+                    child: _ListingCard(
+                      image: pet.images.first.image,
+                      name: pet.petName,
+                      breed: pet.petBreed,
+                      age: pet.age != null ? '${pet.age} years' : 'Age unknown',
+                    ),
+                  );
+                }).toList(),
             ],
           ),
-          const SizedBox(height: 24),
-          _ListingCard(
-            image: 'https://i.imgur.com/QwhZRyL.png',
-            name: 'Max',
-            breed: 'Golden Retriever',
-            age: '8 months',
-            status: 'Active',
-            requestCount: 3,
-          ),
-          _ListingCard(
-            image: 'https://i.imgur.com/tGbaZCY.jpg',
-            name: 'Luna',
-            breed: 'Maltest',
-            age: '1.5 years',
-            status: 'Active',
-            requestCount: 1,
-          ),
-        ],
-      ),
-    );
+        );
   }
 }
 
@@ -168,61 +182,56 @@ class _ActionCard extends StatelessWidget {
 
 
 class _ListingCard extends StatelessWidget {
-  final String image;
+  final Uint8List image;
   final String name;
   final String breed;
   final String age;
-  final String status;
-  final int requestCount;
 
   const _ListingCard({
     required this.image,
     required this.name,
     required this.breed,
     required this.age,
-    required this.status,
-    required this.requestCount,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: ListTile(
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.network(
-            image,
-            width: 60,
-            height: 60,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) =>
-                const Icon(Icons.broken_image, size: 60, color: Colors.grey),
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return const SizedBox(
-                width: 60,
-                height: 60,
-                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-              );
-            },
-          ),
-        ),
-        title: Text(name),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
           children: [
-            Text('$breed '),
-            Text('• $age'),
-            Text('$requestCount requests', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
-          ],
-        ),
-        trailing: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Chip(label: Text(status), backgroundColor: Colors.green.shade100),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.memory(
+                image,
+                width: 120,
+                height: 120, // Increased height
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: SizedBox(
+                height: 120, // Match the image height
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text(breed, style: const TextStyle(color: Colors.grey)),
+                    Text(age, style: const TextStyle(color: Colors.grey)),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
+

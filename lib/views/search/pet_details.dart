@@ -22,12 +22,6 @@ class PetDetailsPage extends StatelessWidget {
         leading: const BackButton(color: Colors.black),
         backgroundColor: Colors.white,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: FutureBuilder<PetDetail?>(
         future: petService.getPetDetails(id),

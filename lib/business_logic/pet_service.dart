@@ -176,4 +176,8 @@ class PetService {
   Future<int> deleteBreed(int breedId) async {
     return await _petBreedRepository.deleteBreed(breedId);
   }
+
+  Future<List<PetDetail>> getPetsCreatedByUser(int userId) async {
+  return await _petRepository.getPetsByUserId(userId);
+  }   
 }

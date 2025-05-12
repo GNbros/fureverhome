@@ -40,7 +40,6 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         actions: [
-          IconButton(icon: Icon(Icons.favorite_border), onPressed: () {}),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {

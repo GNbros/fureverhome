@@ -254,4 +254,51 @@ class PetRepository {
     return pet;
   }
 
+  // Fetch all pets created by a specific user
+Future<List<PetDetail>> getPetsByUserId(int userId) async {
+  final db = await _dbHelper.database;
+
+
+  Future<List<PetType>> getAllTypes() async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('pet_types');
+    return maps.map((map) => PetType.fromMap(map)).toList();
+  }
+
+  Future<List<Breed>> getAllBreeds() async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('breeds');
+    return maps.map((map) => Breed.fromMap(map)).toList();
+  }
+
+  // Fetch all pets created by the user
+  final List<Map<String, dynamic>> maps = await db.query(
+    'pet_details',
+    where: 'user_id = ?', // Assuming 'user_id' is the column storing the creator's ID
+    whereArgs: [userId],
+    orderBy: 'id DESC', // Order by pet ID (descending)
+  );
+
+  final List<Map<String, dynamic>> imageMaps = await db.query(
+    'pet_images',
+    where: 'position = ?',
+    whereArgs: [1],
+    orderBy: 'pet_id ASC',
+  );
+
+  // Create a list of PetImage objects from the imageMaps
+  final List<PetImage> petImages = imageMaps.map((map) => PetImage.fromMap(map)).toList();
+
+  // Create a list of PetDetail objects with the corresponding images
+  final List<PetDetail> pets = List.generate(maps.length, (i) {
+    final pet = PetDetail.fromMap(maps[i]);
+    final image = petImages.firstWhere((img) => img.petId == pet.id);
+    return pet.copyWith(images: [image]);
+  });
+
+  final breeds = await getAllBreeds();
+  final types = await getAllTypes();
+  return await mapTypeBreed(pets, breeds, types);
+}
+
 }
