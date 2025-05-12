@@ -50,6 +50,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           name: name,
           phone: phone,
           address: address,
+          profilePicture: _profileImage?.readAsBytesSync(),
         );
 
         await userService.updateUserDetails(updatedUser);

@@ -1,31 +1,85 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:fureverhome/views/create_pet_listing.dart';
+import 'package:fureverhome/business_logic/user_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+   @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  String? name;
+  String? phone;
+  String? address;
+  String? userId;
+  String? uid;
+  Uint8List? picture;
+  bool isLoading = false;
+
+  Future<void> fetchUserData() async {
+    setState(() => isLoading = true);
+
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+
+    try {
+      final user = await UserService().getUserByFirebaseUid(currentUser.uid);
+
+      if (user != null) {
+        setState(() {
+          userId = user.id.toString();
+          uid = user.firebaseUid;
+          name = user.name;
+          phone = user.phone;
+          address = user.address;
+          picture = user.profilePicture; // Should be stored as base64 or bytes
+        });
+        debugPrint("User data loaded: $picture");
+      }
+    } catch (e) {
+      debugPrint("Failed to load user: $e");
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // User Info
-          Row(
+    return isLoading
+      ? const Center(child: CircularProgressIndicator())
+      : SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CircleAvatar(
-                radius: 25,
-                backgroundImage: NetworkImage('https://i.imgur.com/QwhZRyL.png'),
+              // User Info
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundImage: picture != null
+                        ? MemoryImage(picture!)
+                        : const NetworkImage('https://i.imgur.com/QwhZRyL.png') as ImageProvider,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    name ?? 'Loading...',
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                ],
               ),
-              const SizedBox(width: 12),
-              const Text(
-                'Sarah Wilson',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
           // Saved Pets & Create listing
           Row(

@@ -145,7 +145,7 @@ class HomePage extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 8),
                                   Text(pet.petName), // Display pet name
-                                  Text(pet.petBreed ?? '',
+                                  Text(pet.petBreed,
                                       style: const TextStyle(color: Colors.grey)),
                                 ],
                               ),
