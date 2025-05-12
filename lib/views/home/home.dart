@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fureverhome/views/main_base.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fureverhome/views/auth/login.dart';
-
+import 'package:fureverhome/repositories/pet_repository.dart'; 
+import 'package:fureverhome/models/pet_detail.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -23,7 +24,9 @@ class HomePage extends StatelessWidget {
         body: Center(child: CircularProgressIndicator()),
       );
     }
-    
+
+    final PetRepository petRepository = PetRepository(); // Initialize PetRepository
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +57,7 @@ class HomePage extends StatelessWidget {
                       ),
                     );
                   },
-                   style: ElevatedButton.styleFrom(
+                  style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.amber,
                     shape: const StadiumBorder(),
                     padding: const EdgeInsets.symmetric(
@@ -103,48 +106,56 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.network(
-                              'https://i.imgur.com/QwhZRyL.png',
-                              height: 120,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
+                
+                // FutureBuilder to load pets from the repository
+                FutureBuilder<List<PetDetail>>(
+                  future: petRepository.getAllPets(), // Fetch all pets
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
+
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text('No pets found.'));
+                    }
+
+                    final pets = snapshot.data!;
+
+                    return Column(
+                      children: pets.map((pet) {
+                        return Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: pet.images.isNotEmpty
+                                        ? Image.memory(
+                                            pet.images.first.image, // Display the first image
+                                            height: 120,
+                                            width: double.infinity,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : const SizedBox(height: 120), // Placeholder
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(pet.petName), // Display pet name
+                                  Text(pet.petBreed ?? '',
+                                      style: const TextStyle(color: Colors.grey)),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text("Max"),
-                          const Text("Golden Retriever",
-                              style: TextStyle(color: Colors.grey)),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.network(
-                              'https://i.imgur.com/tGbaZCY.jpg',
-                              height: 120,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text("Luna"),
-                          const Text("Maltese",
-                              style: TextStyle(color: Colors.grey)),
-                        ],
-                      ),
-                    ),
-                  ],
+                            const SizedBox(width: 16),
+                          ],
+                        );
+                      }).toList(),
+                    );
+                  },
                 ),
               ],
             ),
