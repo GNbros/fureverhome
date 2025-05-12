@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fureverhome/views/main_base.dart';
+import 'package:fureverhome/views/user_detail_form.dart';
 import '../views/auth/login.dart';
 import '../business_logic/user_service.dart';
 import '../models/user_detail.dart';
@@ -36,7 +37,7 @@ class AuthService {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => const MainScreen()
+          builder: (BuildContext context) => UserDetailsPage(email: email, password: password,)
         )
       );
       

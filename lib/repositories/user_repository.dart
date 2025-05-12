@@ -5,6 +5,19 @@ class UserRepository {
     final DatabaseHelper _dbHelper = DatabaseHelper();
 
 
+    Future<UserDetail?> getUserByFirebaseUid(String firebaseUid) async {
+      final db = await _dbHelper.database;
+      final List<Map<String, dynamic>> maps = await db.query(
+        'users',
+        where: 'firebase_uid = ?',
+        whereArgs: [firebaseUid],
+      );
+      if (maps.isNotEmpty) {
+        return UserDetail.fromMap(maps.first);
+      }
+      return null;
+    }
+
     // Fetch user details
     Future<UserDetail?> getUserDetails(int userId) async {
         final db = await _dbHelper.database;

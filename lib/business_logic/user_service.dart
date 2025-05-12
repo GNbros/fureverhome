@@ -53,4 +53,8 @@ class UserService {
     await _favoritesRepository.removeFavorite(userId, petId);
   }
 
+  Future<UserDetail?> getUserByFirebaseUid(String uid) async {
+  return await _userRepository.getUserByFirebaseUid(uid);
+}
+
 }
