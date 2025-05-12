@@ -7,6 +7,15 @@ import 'package:fureverhome/repositories/pet_breed_repository.dart';
 import 'package:fureverhome/repositories/pet_type_repository.dart';
 
 class PetService {
+    // Private constructor
+  PetService._internal();
+
+  // Singleton instance
+  static final PetService _instance = PetService._internal();
+
+  // Factory constructor returns the same instance
+  factory PetService() => _instance;
+  
   final PetRepository _petRepository = PetRepository();
   final PetBreedRepository _petBreedRepository = PetBreedRepository();
   final PetTypeRepository _petTypeRepository = PetTypeRepository();

@@ -4,6 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../views/home/home.dart';
 import '../views/auth/login.dart';
+import '../business_logic/user_service.dart';
+import '../models/user_detail.dart';
 
 class AuthService {
 
@@ -15,11 +17,22 @@ class AuthService {
     
     try {
 
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password
       );
 
+      if (user.user != null) {
+        await UserService().addNewUser(
+          UserDetail(
+            firebaseUid : user.user!.uid,
+            name: "",
+            phone: "",
+            address: "",
+          )
+        );
+      }
+      
       await Future.delayed(const Duration(seconds: 1));
       Navigator.pushReplacement(
         context,

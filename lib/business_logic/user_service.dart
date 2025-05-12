@@ -4,6 +4,15 @@ import 'package:fureverhome/repositories/user_favorite_repository.dart';
 
 
 class UserService {
+    // Private constructor
+  UserService._internal();
+
+  // The single instance (lazily instantiated)
+  static final UserService _instance = UserService._internal();
+
+  // Public factory constructor
+  factory UserService() => _instance;
+
   final UserRepository _userRepository = UserRepository();
   final FavoritesRepository _favoritesRepository = FavoritesRepository();
 
