@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fureverhome/views/auth/login.dart';
 import 'package:fureverhome/business_logic/pet_service.dart'; 
 import 'package:fureverhome/models/pet_detail.dart';
+import 'package:fureverhome/views/search/pet_details.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -135,6 +136,7 @@ class HomePage extends StatelessWidget {
                           age: pet.age.toString() + ' year(s)',
                           gender: pet.gender.toString(),
                           image: pet.images.first.image,
+                          id: pet.id,
                         );
                       }).toList(),
                     );
@@ -154,6 +156,7 @@ class HomePage extends StatelessWidget {
 
 class PetCard extends StatelessWidget {
   final String name, breed, age, gender;
+  final int id;
   final Uint8List image;
 
   const PetCard({
@@ -163,6 +166,7 @@ class PetCard extends StatelessWidget {
     required this.age,
     required this.gender,
     required this.image,
+    required this.id
   });
 
   @override
@@ -172,20 +176,16 @@ class PetCard extends StatelessWidget {
 
     return 
     GestureDetector(
-      // onTap: () {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => PetDetailsPage(
-      //         name: name,
-      //         breed: breed,
-      //         age: age,
-      //         gender: gender,
-      //         imageUrl: image,
-      //       ),
-      //     ),
-      //   );
-      // },
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PetDetailsPage(
+              id: id
+            ),
+          ),
+        );
+      },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         margin: const EdgeInsets.only(bottom: 16),
