@@ -25,6 +25,7 @@ class PetService {
   // Search for pets
   Future<List<PetDetail>> searchPets({
     String? name,
+    String order = "DESC",
     int? typeId,
     int? breedId,
     String? gender,
@@ -43,6 +44,7 @@ class PetService {
       isSpayed: isSpayed,
       isKidFriendly: isKidFriendly,
       age: age,
+      order: order,
     );
     final petBreeds = await _petBreedRepository.getAllBreeds();
     final petTypes = await _petTypeRepository.getPetTypes();

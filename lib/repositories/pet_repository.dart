@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/widgets.dart';
 import 'package:fureverhome/services/database_service.dart';
 import 'package:fureverhome/models/pet_detail.dart';
 import 'package:fureverhome/models/pet_image.dart';
@@ -192,6 +193,7 @@ class PetRepository {
     bool? isSpayed,
     bool? isKidFriendly,
     int? age,
+    String order = 'DESC',
   }) async {
   final db = await _dbHelper.database;
 
@@ -236,10 +238,27 @@ class PetRepository {
   final result = await db.rawQuery('''
     SELECT * FROM pet_details
     $whereString
-    ORDER BY datetime(created_at) DESC
+    ORDER BY datetime(created_at) $order
   ''', whereArgs);
 
-  return result.map((map) => PetDetail.fromMap(map)).toList();
+      final List<Map<String, dynamic>> imageMaps = await db.query(
+      'pet_images',
+      where: 'position = ?',
+      whereArgs: [1],
+      orderBy: 'pet_id ASC',
+    );
+
+    // Create a list of PetImage objects from the imageMaps
+    final List<PetImage> petImages = imageMaps.map((map) => PetImage.fromMap(map)).toList();
+    final List<PetDetail> pets = List.generate(result.length, (i) {
+      final pet = PetDetail.fromMap(result[i]);
+      // Find the corresponding image for the pet
+      final image = petImages.firstWhere((img) => img.petId == pet.id);
+      // Return a new PetDetail object with the image
+      return pet.copyWith(images: [image]);
+    });
+  
+  return pets;
 }
 
   // helper function to get pet types and breeds
