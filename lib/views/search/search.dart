@@ -16,6 +16,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final PetService petService = PetService();
+  final TextEditingController _searchController = TextEditingController();
   List<PetType> _types = [];
   List<Breed> _breeds = [];
 
@@ -220,9 +221,26 @@ class _SearchPageState extends State<SearchPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
+              controller: _searchController,
+              onSubmitted: (value) {
+                setState(() {
+                  name = value.trim().isNotEmpty ? value.trim() : null;
+                });
+                _applyFilters();
+              },
               decoration: InputDecoration(
                 hintText: 'Search pets...',
                 prefixIcon: const Icon(Icons.search),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    _searchController.clear();
+                    setState(() {
+                      name = null;
+                    });
+                    _applyFilters();
+                  },
+                ),
                 filled: true,
                 fillColor: Colors.grey[200],
                 contentPadding: const EdgeInsets.symmetric(vertical: 0),
@@ -232,34 +250,6 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
             ),
-            // const SizedBox(height: 12),
-            // SizedBox(
-            //   height: 40,
-            //   child: ListView.separated(
-            //     scrollDirection: Axis.horizontal,
-            //     itemCount: categories.length,
-            //     separatorBuilder: (_, __) => const SizedBox(width: 8),
-            //     itemBuilder: (context, index) {
-            //       final category = categories[index];
-            //       final isSelected = category == selectedCategory;
-
-            //       return ChoiceChip(
-            //         label: Text(category),
-            //         selected: isSelected,
-            //         onSelected: (_) => setState(() {
-            //           selectedCategory = category;
-            //           _applyFilters();
-            //         }),
-            //         selectedColor: Colors.amber[100],
-            //         backgroundColor: Colors.grey[200],
-            //         labelStyle: TextStyle(
-            //           color: isSelected ? Colors.black : Colors.grey[600],
-            //           fontWeight: FontWeight.w500,
-            //         ),
-            //       );
-            //     },
-            //   ),
-            // ),
             const SizedBox(height: 16),
             FutureBuilder<List<PetDetail>>(
               future: filteredPetsFuture,

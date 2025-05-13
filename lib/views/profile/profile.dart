@@ -135,7 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       image: pet.images.first.image,
                       name: pet.petName,
                       breed: pet.petBreed,
-                      age: pet.age != null ? '${pet.age} years' : 'Age unknown',
+                      age: pet.age,
                     ),
                   );
                 }).toList(),
@@ -185,7 +185,7 @@ class _ListingCard extends StatelessWidget {
   final Uint8List image;
   final String name;
   final String breed;
-  final String age;
+  final int age;
 
   const _ListingCard({
     required this.image,
@@ -223,7 +223,7 @@ class _ListingCard extends StatelessWidget {
                   children: [
                     Text(name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     Text(breed, style: const TextStyle(color: Colors.grey)),
-                    Text(age, style: const TextStyle(color: Colors.grey)),
+                    Text('$age years', style: const TextStyle(color: Colors.grey)),
                   ],
                 ),
               ),

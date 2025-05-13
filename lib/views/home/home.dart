@@ -70,33 +70,7 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
-
-          // Search and Filters
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                const TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search pets...',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 8,
-                  children: const [
-                    Chip(label: Text("Dogs")),
-                    Chip(label: Text("Cats")),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          const SizedBox(height: 12),
 
           // Featured Pets
           Padding(
@@ -192,7 +166,7 @@ class PetCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image
+            // Image & Favorite icon
             Stack(
               children: [
                 ClipRRect(
